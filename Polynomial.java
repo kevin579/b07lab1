@@ -1,6 +1,7 @@
 public class Polynomial{
 	double[] coefficients;
-
+	double EPS = 1e-9;
+	
 	public Polynomial(){
 		coefficients = new double[1];
 		coefficients[0] = 0;
@@ -43,9 +44,6 @@ public class Polynomial{
 	}
 	
 	public boolean hasRoot(double x) {
-		if (this.evaluate(x)==0) {
-			return true;
-		}
-		return false;
+		return Math.abs(evaluate(x)) <= EPS;
 	}
 }

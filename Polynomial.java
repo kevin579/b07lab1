@@ -42,17 +42,23 @@ public class Polynomial{
 		this.degree = degree.clone();
 	}
 	
-	public Polynomial(File file) throws FileNotFoundException {
-		Scanner input = new Scanner(file); 
-		String poly = input.nextLine();
-		input.close();
-		poly = poly.replaceAll("\\s+", "");
-		if (poly.isEmpty()) {
+	public Polynomial(File file){
+		try {
+			Scanner input = new Scanner(file); 
+			String poly = input.nextLine();
+			input.close();
+			poly = poly.replaceAll("\\s+", "");
+			if (poly.isEmpty()) {
+				coefficients = new double[]{0.0};
+				degree = new int[]{0};
+				return;
+			}
+			this.parse(poly);
+		} catch(FileNotFoundException e) {
 			coefficients = new double[]{0.0};
-			degree = new int[]{0};
-			return;
+	        degree = new int[]{0};
 		}
-		this.parse(poly);
+		
 	}
 	
 	private void parse(String poly) {
@@ -219,21 +225,26 @@ public class Polynomial{
 		return new Polynomial(newPoly);
 	}
 	
-	public void saveToFile(String path) throws IOException{
-		FileWriter output = new FileWriter(path,false);
-		String poly = "";
+	public void saveToFile(String path) {
+		try {
+			FileWriter output = new FileWriter(path,false);
+			String poly = "";
 
-		for (int i=0;i<this.degree.length;i++) {
-			poly+=this.toStr(this.coefficients[i],this.degree[i]);
-		}
-		if (!poly.isEmpty()) {
-			if (poly.charAt(0)=='+') {
-				poly = poly.substring(1);
+			for (int i=0;i<this.degree.length;i++) {
+				poly+=this.toStr(this.coefficients[i],this.degree[i]);
 			}
-		}
+			if (!poly.isEmpty()) {
+				if (poly.charAt(0)=='+') {
+					poly = poly.substring(1);
+				}
+			}
 
-		output.append(poly);
-		output.close();
+			output.append(poly);
+			output.close();
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
 	}
 	
 	public String toStr(double c, int d) {
